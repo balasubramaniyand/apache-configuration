@@ -48,3 +48,8 @@ RewriteRule .* - [F]
    Require all granted
 </Directory>
 </VirtualHost>
+
+===============================
+
+sudo ln -s /etc/apache2/sites-available/bala.conf /etc/apache2/sites-enabled/bala.conf
+systemctl restart apache2
