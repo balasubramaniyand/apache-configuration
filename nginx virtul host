@@ -1,0 +1,20 @@
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/example.com  ---> create new file default conf
+sudo vi /etc/nginx/sites-available/example.com
+  ---
+  server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        root /var/www/html;
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name _;
+
+        location / {
+                try_files $uri $uri/ =404;
+        }
+}
+
+==============================================================
+  sudo ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/test.com /etc/nginx/sites-enabled/
