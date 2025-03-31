@@ -1,0 +1,50 @@
+pwd
+/etc/apache2/sites-available
+  =======================
+<VirtualHost *:80>
+ServerName itals-staging.growipx.com
+Redirect permanent / https://itals-staging.growipx.com/
+<Directory /var/www/html/als/public>
+        AllowOverride None
+        Require all granted
+</Directory>
+    RewriteEngine on
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+    RewriteRule .* - [F]
+</VirtualHost>
+=======================================
+  ssl apache.conf
+  ==================
+  <VirtualHost *:443>
+DocumentRoot /var/www/html/ams/public
+ServerName ams-staging.growipx.com
+Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
+Header always append X-Frame-Options SAMEORIGIN
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set X-Content-Type-Options "nosniff"
+Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+#Header set Content-Security-Policy "default-src *; script-src *; style-src *;"
+#Header set Content-Security-Policy: "default-src 'self'; script-src 'self'; style-src 'self';"
+#Header set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'self'"
+#Header set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval';img-src 'self' data:;"
+#Header set Referrer-Policy "no-referrer"
+Header always set Feature-Policy "fullscreen 'none' "
+SSLEngine On
+SSLCertificateFile /etc/pki/tls/certs/growipx.com.crt
+SSLCertificateKeyFile /etc/pki/tls/private/growipx.com.key
+SSLCACertificateFile /etc/pki/tls/certs/growipx-gd_bundle-g2-g1.crt
+SSLProtocol -all +TLSV1.2 +TLSV1.3
+SSLHonorCipherOrder on
+RewriteEngine on
+ErrorLog /var/log/apache2/ams-stg-error_log
+CustomLog /var/log/apache2/ams-stg_custom_log common
+RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+RewriteRule .* - [F]
+<IfModule dir_module>
+    DirectoryIndex index.html index.php
+</IfModule>
+<Directory /var/www/html/ams/public>
+   AllowOverride All
+   Require all granted
+</Directory>
+</VirtualHost>
