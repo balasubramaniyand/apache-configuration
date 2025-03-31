@@ -1,0 +1,28 @@
+/etc/apache2/sites-available/bala.conf create new config
+-----
+<VirtualHost *:80>
+    ServerName your_domain.com
+    DocumentRoot /var/www/html/my_app/public  # Adjust path to your application's public directory
+    <Directory /var/www/html/my_app/public>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+    ErrorLog ${APACHE_LOG_DIR}/my_app_error.log
+    CustomLog ${APACHE_LOG_DIR}/my_app_access.log combined
+</VirtualHost>
+---
+
+
+sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/example.com.conf
+
+
+-----
+<VirtualHost *:80>
+    ServerAdmin admin@test.com
+    ServerName test.com
+    ServerAlias www.test.com
+    DocumentRoot /var/www/test.com/public_html
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
