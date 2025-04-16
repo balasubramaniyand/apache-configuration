@@ -1,0 +1,54 @@
+<VirtualHost *:80>
+ServerName ivizify.growipx.com
+Redirect permanent / https://ivizify.growipx.com
+<Directory /var/www/html/grafana>
+        AllowOverride All
+        Require all granted
+</Directory>
+    RewriteEngine on
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+    RewriteRule .* - [F]
+</VirtualHost>
+
+
+<VirtualHost *:443>
+DocumentRoot /var/www/html/grafana
+ServerName ivizify.growipx.com
+Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
+Header set X-Forwarded-Proto "https"
+#Header always append X-Frame-Options SAMEORIGIN
+#Header always set X-Content-Type-Options "nosniff"
+#Header set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval';style-src * 'self' 'unsafe-inline' ;img-src * 'self' 'unsafe-inline' 'unsafe-eval' data:; frame-ancestors 'self' https://#ts.growatiopex.com/; X-Frame-Options: ALLOW-FROM  https://ts.growatiopex.com/; "
+#Header set Referrer-Policy "no-referrer"
+#Header always set Feature-Policy "fullscreen 'none' "
+SSLEngine On
+SSLCertificateFile /etc/pki/tls/certs/growipx.com.crt
+SSLCertificateKeyFile /etc/pki/tls/private/growipx.com.key
+SSLCACertificateFile /etc/pki/tls/certs/gd_bundle-g2-g1.crt
+SSLProtocol -all +TLSV1.2
+SSLHonorCipherOrder on
+#Proxy SSL options
+SSLProxyEngine on
+SSLProxyVerifyDepth 10
+SSLProxyCheckPeerCN off
+SSLProxyCheckPeerName off
+
+ProxyPreserveHost On
+
+ProxyPass / http://10.30.7.52:3000/
+ProxyPassReverse / https://10.30.7.52:3000/
+ErrorLog /var/log/apache2/ids-error_log
+CustomLog /var/log/apache2/ids_custom_log common
+CustomLog "|/usr/bin/logger -p local1.info -t httpd" combinedsys
+HostnameLookups off
+RewriteEngine on
+RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK)
+RewriteRule .* - [F]
+<IfModule dir_module>
+    DirectoryIndex index.html index.php
+</IfModule>
+<Directory /var/www/html/grafana>
+   AllowOverride All
+   Require all granted
+</Directory>
+</VirtualHost>
